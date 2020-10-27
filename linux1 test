@@ -1,18 +1,87 @@
-Directories aanmaken:
-Voorbeeld: [neal@localhost home]$ sudo mkdir -p /home/{test1,test2}/{July,Aug}/{1..31}
-Gebruikers aanmaken:
-Gebruiker aanmaken: [neal@localhost root]$ useradd goofy
-Wachtwoord wijzigen: [neal@localhost root]$ passwd goofy
-Wachtwoord wijzigen na eerste login: [neal@localhost root]$ chage -d 0 goofy
-Gebruikersaccount expiredate: [neal@localhost root]$ chage -E YYYY-MM-DD Donald
-Meer info zie:
-useradd: https://linux.die.net/man/8/useradd
-chage: https://linux.die.net/man/1/chage
+Linux test cheat sheet
 
-For loop gebruiken voor gebruikers aanmaken:
-For i in {1..4}
-do
-sudo useradd Aapje$i -d /home/aapjes      # -d staat voor set homedirectoy
-echo “Welkom01!” | sudo passwd Aapje$i –stdin
-sudo chage Aapje$i -E 62
-done
+--------------------------------------------------------------------------------------------------
+Vi/Vim commando's:
+--------------------------------------------------------------------------------------------------
+  #random knoppen spammen is type modus
+  #esc-button is command modus
+  #:wq is opslaan en afsluiten
+  #:q! is afsluiten zonder opslaan
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+Directories aanmaken:
+--------------------------------------------------------------------------------------------------
+  Voorbeeld: [neal@localhost home]$ sudo mkdir -p /home/{test1,test2}/{July,Aug}/{1..31}
+  Gebruikers aanmaken:
+  Gebruiker aanmaken: [neal@localhost root]$ useradd goofy
+  Wachtwoord wijzigen: [neal@localhost root]$ passwd goofy
+  Wachtwoord wijzigen na eerste login: [neal@localhost root]$ chage -d 0 goofy
+  Gebruikersaccount expiredate: [neal@localhost root]$ chage -E YYYY-MM-DD Donald
+  
+  Meer info zie:
+  useradd: https://linux.die.net/man/8/useradd
+  chage: https://linux.die.net/man/1/chage
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+For loop:
+--------------------------------------------------------------------------------------------------
+gebruiken voor gebruikers aanmaken:
+  For i in {1..4}
+    do
+    sudo useradd Aapje$i -d /home/aapjes      # -d staat voor set homedirectoy
+    echo “Welkom01!” | sudo passwd Aapje$i –stdin
+    sudo chage Aapje$i -E 62
+  done
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+disk adden aan vmware
+--------------------------------------------------------------------------------------------------
+  iscs disk toevoegen aan vm op vmware
+  vm opnieuw opstarten
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+partitie aanmaken:
+--------------------------------------------------------------------------------------------------
+  fdisk -l  #list alle disks en partities
+  fdisk /dev/<naam disk>  #opent fdisk utility voor partition management
+  n   #nieuwe partitie aanmaken
+  w   #wijzigingen accepteren en aanmaken
+
+--------------------------------------------------------------------------------------------------
+Filesystem toewijzen aan partitie:
+--------------------------------------------------------------------------------------------------
+  mkfs -t <type> /dev/<partitie naam>
+--------------------------------------------------------------------------------------------------
+  
+--------------------------------------------------------------------------------------------------
+Partitie mounten:
+--------------------------------------------------------------------------------------------------
+  #maak een mountpunt aan voor de partitie. Bijvoorbeeld: mkdir /home/data/mountpunt1
+  mount -t <type> /dev/<partitienaam> /home/date/mountpunt1
+  mount
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+Partitie permanent mounten:
+--------------------------------------------------------------------------------------------------
+  #check uuid van partitie: sudo blkid
+  vi /etc/fstab
+  #Voeg het uuid toe van de partitie
+  UUID="34854b06-853b-4ee2-8d36-2c5e1a56d323" /home/data/mountpunt1/      <type filesystem>    defaults        0 0
+--------------------------------------------------------------------------------------------------
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

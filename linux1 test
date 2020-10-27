@@ -40,6 +40,8 @@ gebruiken voor gebruikers aanmaken:
 Groepen aanmaken:
 --------------------------------------------------------------------------------------------------
 groupadd <naam>
+
+meer info zie: https://linux.die.net/man/8/groupadd
 --------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------
@@ -78,6 +80,16 @@ Partitie permanent mounten:
   vi /etc/fstab
   #Voeg het uuid toe van de partitie
   UUID="34854b06-853b-4ee2-8d36-2c5e1a56d323" /home/data/mountpunt1/      <type filesystem>    defaults        0 0
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+LVM logical volume manager:
+--------------------------------------------------------------------------------------------------
+  #maak partities via de fdisk utility die je wil toevoegen aan de logical volumegroup
+  vgcreate <naam volumegroup> /dev/<partitienaam1> /dev/<partitienaam2> #maakt een logical volumegroup aan, bestaande uit de opgegeven partities
+  lvcreate -n <naam logicalvolume> <grote volume> <naam volumegroup> #maakt een logical volume aan op de logical volumegroup
+  lvdisplay #print alle informatie over alle logicalvolumes (hier is de path van logicalvolume ook in te vinden)
+  mkfs -t <type filesystem> <path logicalvolume> #maakt filesystem op de logical volume
 --------------------------------------------------------------------------------------------------
 
   

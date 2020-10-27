@@ -92,10 +92,131 @@ LVM logical volume manager:
   mkfs -t <type filesystem> <path logicalvolume> #maakt filesystem op de logical volume
 --------------------------------------------------------------------------------------------------
 
+
+
+
+--------------------------------------------------------------------------------------------------
+oefentoets:
+--------------------------------------------------------------------------------------------------
+Task 1  
+  a-	To accommodate the two product groups we need 2 directories under /home called Raspi (for the raspberry Pi’s) and Sunny 
+  (for the electronic sunburn alarm gadgets). In both those directories  create daily log directories such that they are 
+  grouped per month for the months July and August. So for 
+  instance /home/Raspi/July/1  ;  /home/Raspi/July/2  ; /home/Raspi/July/31 ; /home/Sunny/Aug/1 etc.
+  b-	Create one manager account called goofy, with default home directory, initial password “hellogoof” and configure that 
+  account such that he needs to change his password upon first login.
+  c-	Create 6 sales accounts for both product lines, named R1 .. 6 and S1..6. For R*, make the /home/Raspi directory their home directory. For S* /home/Sunny
+  d-	Since the popup store is only active for 2 months and the sales persons are students that are only with us for this period, make sure 
+  all sales accounts will be disabled in 62 days.
   
+  Oplossing
+  a.	mkdir -p /home/{Raspi,Sunny}/{July,Aug}/{1..31}
+  b.	useradd goofy; passwd goofy; chage goofy -d0
+  c.	for i in {1..6}
+  do
+     useradd S$i  --home /home/Sunny
+     useradd R$i  --home /home/Raspi
+     echo “Welkom01” | passwd S$i –stdin
+     echo “Welkom01” | passwd R$i –stdin
+     chage S$i  -E $(date -d 62days +%Y-%m-%d)
+     chage R$i  -E $(date -d 62days +%Y-%m-%d)
+  done
   
+Task 2
+  We need data stored in a separate file system. Attach a second disk to your server and create a partition of 100M. 
+  Mount this partition  with filesystem type xfs on /home/data (create if it doesn’t exist).
+
+  Oplossing
+  Fdisk /dev/sdb
+  Mkfs -t xfs /dev/sdb1
+  Mkdir /home/data
+  Mount /dev/sdb1 /home/data
   
+Task 3
+  Create a group called Sales and make all sales persons AND goofy part of that group as their secondary group. 
+  Set permissions on /home/data such that goofy owns the directory and all sales persons and goofy can read and write that directory. Other users should not have access.
+
+  Oplossing
+  Groupadd Sales
+  Vim /etc/group
+  Chown goofy:Sales /home/data
+  Chmod 770 /home/data
   
+Task 4
+  Set up the Raspi and Sunny directories such that all members of the group Sales have read and write access to those directories and 
+  all newly created files and directories automatically grant that same access (collaborative directories).
+  
+  Oplossing
+  Chown :Sales /home/{Raspi,Sunny}
+  Chmod 2770 /home/{Raspi,Sunny}
+
+Task 5
+  Because it is unclear how well the popup store will be perceived, we will need a file store that holds all 
+  sales orders, which should be flexible storage. We decide to use LVM.
+  a-	Create 2 partitions each 100M size on the disk you added  in task 2. 
+  Make them member of a volume group called orders_vg  and create an initial volume called orders_lv of size 150M. 
+  b-	Create a filesystem of type xfs on this LV
+  c-	Mount the filesystem persistently on /home/orders (create directory if it doesn’t exist)
+
+  Oplossing
+  Fdisk /dev/sdb
+  Vgcreate orders_vg /dev/sdb1 /dev/sdb2
+  Lvcreate -n orders_lv -L 150M orders_vg
+  Mkfs -t xfs /dev/orders_vg/orders_lv
+  Mkdir /home/orders
+  Vim /etc/fstab
+  Mount -a
+  
+Task 6
+  We need a scratch pad for temporary files. 
+  a-	Create a partition on the disk you added in Task 2 of size 200M
+  b-	Format that partition with fstype xfs 
+  c-	Mount the file system persistently on /home/tmp
+  d-	Configure the directory /home/tmp such that all users can create and delete files in that directory but only when owned by themselves
+  
+  oplossing
+  Fdisk /dev/sdb
+  Mkfs -t xfs /dev/sdb3
+  Mkdir /home/tmp
+  Vim /etc/fstab
+  Mount -a
+  Chmod 1777 /home/tmp
+  
+Task 7
+  Create a file that only contains the line in /etc/sudoers where the privilege to become root is expressed. The filename should be “worrysome_people”
+  
+  oplossing
+  Cat /etc/sudoers | grep wheel > ~/worrysome_people
+  
+Task 8
+  We need some connectivity to Microsoft users, but only later, not now, so
+  a-	Install the Samba package
+  b-	Block the starting of this service so neither a system admin nor another service can start it.
+  
+  oplossing
+  Dnf install samba
+  Systemctl mask samba
+  
+Task 9
+  We want to advertise our great sunburn automated prevention gadget so we will need a website
+  a-	Install apache if not yet done already
+  b-	Make the service started persistently
+  c-	Show a website with your own content of level ‘ hello world’  but aiming at our sunburning audience. So http://localhost should show a oneliner of your choice.
+  
+  oplossing
+  Dnf install http
+  Systemctl start http
+  Systemctl enable http
+  Echo “hello world”> /var/www/html/welcome.html
+
+
+  
+
+
+
+
+
+
   
   
   

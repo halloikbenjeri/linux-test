@@ -1,0 +1,18 @@
+Directories aanmaken:
+Voorbeeld: [neal@localhost home]$ sudo mkdir -p /home/{test1,test2}/{July,Aug}/{1..31}
+Gebruikers aanmaken:
+Gebruiker aanmaken: [neal@localhost root]$ useradd goofy
+Wachtwoord wijzigen: [neal@localhost root]$ passwd goofy
+Wachtwoord wijzigen na eerste login: [neal@localhost root]$ chage -d 0 goofy
+Gebruikersaccount expiredate: [neal@localhost root]$ chage -E YYYY-MM-DD Donald
+Meer info zie:
+useradd: https://linux.die.net/man/8/useradd
+chage: https://linux.die.net/man/1/chage
+
+For loop gebruiken voor gebruikers aanmaken:
+For i in {1..4}
+do
+sudo useradd Aapje$i -d /home/aapjes      # -d staat voor set homedirectoy
+echo “Welkom01!” | sudo passwd Aapje$i –stdin
+sudo chage Aapje$i -E 62
+done
